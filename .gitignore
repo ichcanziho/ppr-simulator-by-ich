@@ -1,0 +1,85 @@
+# -----------------------------
+# Python general
+# -----------------------------
+__pycache__/
+*.py[cod]
+*$py.class
+*.pyo
+*.pyd
+
+# Virtual environments
+env/
+venv/
+.venv/
+ENV/
+env.bak/
+venv.bak/
+
+# Distribution / Packaging
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Logs
+*.log
+logs/
+
+# Byte-compiled / optimized / DLL files
+*.so
+*.dylib
+*.dll
+
+# -----------------------------
+# PyCharm / JetBrains
+# -----------------------------
+.idea/
+*.iml
+out/
+
+# -----------------------------
+# Streamlit
+# -----------------------------
+.streamlit/secrets.toml
+.streamlit/config.toml
+
+# -----------------------------
+# OS files
+# -----------------------------
+.DS_Store
+Thumbs.db
+
+# -----------------------------
+# Cache
+# -----------------------------
+.cache/
+.mypy_cache/
+.pytest_cache/
+pytest_cache/
+.ipynb_checkpoints/
+
+# -----------------------------
+# Put here any local testing files
+# -----------------------------
+/tmp/
+test_*.py
+
+# -----------------------------
+# Sensitive / keys
+# -----------------------------
+*.env
+.env.local
+.env.*.local
+secrets.json
+token.json
+credentials.json
