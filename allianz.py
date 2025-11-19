@@ -17,6 +17,7 @@ from allianz_functions import (
     simular_retiro_ppr,
     buscar_retiro_optimo,
     serie_vp,
+    generar_aportes_con_offset
 )
 
 from allianz_functions_indexadas import (
@@ -64,6 +65,45 @@ with tab1:
 
     with colB:
         incremento_inflacion = st.selectbox("Aumentar con inflación cada año", ["Sí", "No"])
+
+    # ================================================================
+    #     🚀 Estrategia optimizada (cambiar aportes desde mes 19)
+    # ================================================================
+    st.markdown("### 🧠 Estrategia Inteligente (Opcional)")
+
+    modo_estrategia = st.checkbox(
+        "Activar estrategia optimizada (aportes reducidos primeros 18 meses)",
+        value=False
+    )
+
+    if modo_estrategia:
+        colX, colY = st.columns(2)
+
+        with colX:
+            aporte_temporal = st.number_input(
+                "Aportación SOLO durante los primeros 18 meses",
+                min_value=0,
+                max_value=aportacion,
+                value=2000,
+                step=500
+            )
+
+        with colY:
+            offset_manual = st.number_input(
+                "Depósito único adicional en el mes 19 (manual)",
+                min_value=0,
+                max_value=10_000_000,
+                value=0,
+                step=1000
+            )
+
+        # Calculamos automáticamente cuánto dejaste de meter
+        offset_auto = (aportacion - aporte_temporal) * 18
+
+    else:
+        aporte_temporal = aportacion
+        offset_manual = 0
+        offset_auto = 0
 
     # ----------------------- RENDIMIENTO & INFLA -----------------------
     st.markdown("### Parámetros Económicos")
@@ -135,17 +175,44 @@ with tab1:
     # ================================================================
     meses = plazo_comprometido * 12
 
-    # 1) APORTES
-    aportes = generar_aportes(
-        aporte_inicial=aportacion,
-        meses=meses,
-        inflacion_anual=inflacion_anual,
-        incrementar=(incremento_inflacion == "Sí")
-    )
+    # ================================================================
+    # GENERACIÓN REAL DE APORTES — CON O SIN ESTRATEGIA
+    # ================================================================
 
+    aportes = []
+
+    if modo_estrategia:
+        # 1) Primeros 18 meses con aportación reducida
+        # SIN estrategia → aportes normales todos los meses
+
+        aportes = generar_aportes_con_offset(
+            aporte_inicial=aporte_temporal,
+            meses=meses,
+            inflacion_anual=inflacion_anual,
+            incrementar=(incremento_inflacion == "Sí"),
+            offset=18,
+            nuevo_aporte=aportacion
+        )
+        aportes[18] += offset_manual
+
+
+    else:
+        # SIN estrategia → aportes normales todos los meses
+        aportes = generar_aportes(
+            aporte_inicial=aportacion,
+            meses=meses,
+            inflacion_anual=inflacion_anual,
+            incrementar=(incremento_inflacion == "Sí")
+        )
+    print("#"*100)
+    print("aportes ")
+    print(aportes[0:30])
+    print("#"*100)
     # 2) SALDO INICIAL (todo el plazo, aportando solo 18 meses)
+    ap_inicial_real = aportes[0]  # primera mensualidad REAL
+
     df_inicial = simular_saldo_inicial_excel(
-        aporte_inicial=aportacion,
+        aporte_inicial=ap_inicial_real,
         meses_totales=meses,
         meses_aportando=18,
         tasa_anual=rendimiento_anual,

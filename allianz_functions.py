@@ -236,6 +236,23 @@ def generar_aportes(aporte_inicial, meses, inflacion_anual, incrementar):
 
     return aportes
 
+def generar_aportes_con_offset(aporte_inicial, meses, inflacion_anual, incrementar, offset, nuevo_aporte):
+    aportes = []
+    aporte = aporte_inicial
+
+    for m in range(meses):
+        if m == offset:
+            aporte = nuevo_aporte * (1 + inflacion_anual)
+
+        # agregar aporte actual
+        aportes.append(aporte)
+
+        # cada 12 meses (inicio de año) aumentar aporte
+        if incrementar and (m > 0) and (m % 12 == 0):
+            aporte *= (1 + inflacion_anual)
+
+    return aportes
+
 def calcular_bono_fidelidad(aporte_mensual, plazo, usar_bono=True):
     if not usar_bono:
         return 0, 0  # (porcentaje, bono)
