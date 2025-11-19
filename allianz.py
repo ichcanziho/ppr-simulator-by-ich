@@ -17,7 +17,8 @@ from allianz_functions import (
     simular_retiro_ppr,
     buscar_retiro_optimo,
     serie_vp,
-    generar_aportes_con_offset
+    generar_aportes_con_offset,
+    generar_aportes_early_stop
 )
 
 from allianz_functions_indexadas import (
@@ -65,6 +66,20 @@ with tab1:
 
     with colB:
         incremento_inflacion = st.selectbox("Aumentar con inflación cada año", ["Sí", "No"])
+
+    st.markdown("### ⏹️ Early Stop (Opcional)")
+
+    usar_early_stop = st.checkbox("Detener aportaciones después de cierto año", value=False)
+
+    if usar_early_stop:
+        años_aportando = st.number_input(
+            "¿Cuántos años vas a aportar realmente?",
+            min_value=1,
+            max_value=plazo_comprometido,
+            value=10
+        )
+    else:
+        años_aportando = plazo_comprometido
 
     # ================================================================
     #     🚀 Estrategia optimizada (cambiar aportes desde mes 19)
@@ -182,9 +197,7 @@ with tab1:
     aportes = []
 
     if modo_estrategia:
-        # 1) Primeros 18 meses con aportación reducida
-        # SIN estrategia → aportes normales todos los meses
-
+        # estrategia + early stop
         aportes = generar_aportes_con_offset(
             aporte_inicial=aporte_temporal,
             meses=meses,
@@ -193,16 +206,17 @@ with tab1:
             offset=18,
             nuevo_aporte=aportacion
         )
+
         aportes[18] += offset_manual
 
-
     else:
-        # SIN estrategia → aportes normales todos los meses
-        aportes = generar_aportes(
+        # aquí detectamos early stop
+        aportes = generar_aportes_early_stop(
             aporte_inicial=aportacion,
             meses=meses,
             inflacion_anual=inflacion_anual,
-            incrementar=(incremento_inflacion == "Sí")
+            incrementar=(incremento_inflacion == "Sí"),
+            meses_aportando=años_aportando * 12
         )
     print("#"*100)
     print("aportes ")
