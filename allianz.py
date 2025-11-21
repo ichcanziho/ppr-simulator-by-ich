@@ -175,8 +175,14 @@ with tab1:
     st.subheader("🎁 Bono de Fidelidad Allianz")
     usar_bono = st.checkbox("Usar Bono de Fidelidad", value=True)
 
+    # *** APORTACIÓN REAL PARA CALCULAR EL BONO ***
+    if modo_estrategia:
+        aporte_para_bono = aporte_temporal  # usa el aporte reducido
+    else:
+        aporte_para_bono = aportacion  # usa el aporte normal
+
     porcentaje_bono, bono = calcular_bono_fidelidad(
-        aporte_mensual=aportacion if usar_bono else 0,
+        aporte_mensual=aporte_para_bono if usar_bono else 0,
         plazo=plazo_comprometido,
         usar_bono=usar_bono
     )
