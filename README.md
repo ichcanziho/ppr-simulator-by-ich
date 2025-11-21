@@ -1,5 +1,6 @@
+
 # 🧮 PPR Simulator by Ich  
-Simulador profesional de ahorro y retiro basado en Allianz, CETES, y cálculos reales 100% replicados desde Excel.
+Simulador profesional de ahorro y retiro basado en Allianz, CETES y cálculos reales 100% replicados desde Excel.
 
 Este proyecto permite comparar:
 
@@ -17,18 +18,19 @@ Este proyecto permite comparar:
 
 ### 🟦 Etapa de acumulación
 - Aportes crecientes con inflación
-- Simulación exacta de Allianz (comisiones, UDIS, cargos fijos, bono)
-- SAT real según UMA, salarios e ISR marginal
-- Comparación directa con ETF ideal bruto y neto
+- Early Stop opcional para detener aportaciones en cualquier año
+- Estrategia de aportes optimizada (primeros 18 meses reducidos + offset automático/manual)
+- Simulación exacta de Allianz (comisiones, UDIS, cargos fijos, bono de fidelidad)
+- SAT real según UMA, salarios, ISR marginal y límites fiscales
+- Comparación directa con ETF ideal **bruto** y **neto**
 
 ### 🟥 Etapa de retiro
 - Simulación de retiro **nominal** (mismo monto cada mes)
-- Simulación de retiro **indexado** (sube con inflación anual)
-- Retiro óptimo mediante búsqueda binaria
-- Cálculo de mensualidades máximas
-- Gráficas y tablas de saldos VF y VP
-- Total gastado acumulado
-- PPR vs CETES indexado
+- Simulación de retiro **indexado** (sube cada año con la inflación)
+- Búsqueda del retiro óptimo con algoritmo binario
+- Cálculo de mensualidades máximas para agotar el fondo en *N* años
+- Gráficas comparativas de saldos VF y VP
+- Tablas reales de PPR vs CETES, nominal e indexado
 
 ---
 
@@ -39,7 +41,7 @@ ppr-simulator-by-ich/
 │
 ├─ allianz.py                      # UI con Streamlit
 ├─ allianz_functions.py            # Funciones nominales (PPR/CETES)
-├─ allianz_functions_indexadas.py  # Funciones indexadas (PPR/CETES)
+├─ allianz_functions_indexadas.py  # Funciones para retiros indexados
 ├─ tablas.py                       # Cálculos reales de Allianz/Excel
 ├─ requirements.txt                # Dependencias
 ├─ README.md                       # Este archivo
@@ -76,7 +78,7 @@ pip install -r requirements.txt
 
 ---
 
-## ✨ Autor
+## 🧑‍💻 Autor
 
 **Gabriel Ichcanziho Pérez Landa**  
 Aka *Ich*
@@ -85,13 +87,15 @@ Aka *Ich*
 
 ## 🤝 Contribuciones
 
-Proyecto privado, pero puedes crear ramas:
+Este proyecto es **código abierto**.
+
+Puedes crear una rama con:
 
 ```
 git checkout -b feature/nueva-funcion
 ```
 
-y luego:
+Y subirla con:
 
 ```
 git push --set-upstream origin feature/nueva-funcion
@@ -101,4 +105,4 @@ git push --set-upstream origin feature/nueva-funcion
 
 ## 📄 Licencia
 
-Proyecto privado. Todos los derechos reservados.
+Open Source — MIT License.
